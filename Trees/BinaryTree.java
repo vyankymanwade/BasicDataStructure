@@ -42,6 +42,17 @@ class BinaryTree {
             return (1 + noOfNodes(root.left) + noOfNodes(root.right));
     }
 
+    public int getMax(Node root) {
+        if (root == null)
+            return Integer.MIN_VALUE;
+        else
+            return maxFunction(root.data, getMax(root.left), getMax(root.right));
+    }
+
+    public int maxFunction(int data, int left, int right) {
+        return ((data > left ? (data > right ? data : right) : (left > right ? left : right)));
+    }
+
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree();
 
@@ -60,5 +71,6 @@ class BinaryTree {
         bt.postorder(bt.root);
         System.out.println();
         System.out.println("No of nodes in tree: " + bt.noOfNodes(bt.root));
+        System.out.println("Maximum from tree: " + bt.getMax(bt.root));
     }
 }
