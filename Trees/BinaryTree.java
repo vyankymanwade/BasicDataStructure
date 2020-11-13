@@ -1,3 +1,5 @@
+import java.util.Stack;
+
 class BinaryTree {
     Node root;
 
@@ -53,6 +55,43 @@ class BinaryTree {
         return ((data > left ? (data > right ? data : right) : (left > right ? left : right)));
     }
 
+    public int height(Node root) {
+        if (root == null)
+            return 0;
+        else {
+            return (1 + Math.max(height(root.left), height(root.right)));
+        }
+    }
+
+    public void IterativeInorder(Node root) {
+        Node temp = root;
+        Stack<Node> s = new Stack<Node>();
+        while (temp != null || !s.isEmpty()) {
+            while (temp != null) {
+                s.push(temp);
+                temp = temp.left;
+            }
+            temp = s.pop();
+            System.out.print(temp.data + " ");
+            temp = temp.right;
+        }
+        System.out.println();
+    }
+
+    public void IterativePreorder(Node root) {
+        Node temp = root;
+        Stack<Node> s = new Stack<Node>();
+        while (temp != null || !s.isEmpty()) {
+            while (temp != null) {
+                System.out.print(temp.data + " ");
+                s.push(temp);
+                temp = temp.left;
+            }
+            temp = s.pop();
+            temp = temp.right;
+        }
+    }
+
     public static void main(String args[]) {
         BinaryTree bt = new BinaryTree();
 
@@ -61,6 +100,7 @@ class BinaryTree {
         bt.root.right = new Node(15);
         bt.root.left.left = new Node(3);
         bt.root.left.right = new Node(7);
+        bt.root.left.left.left = new Node(25);
         System.out.print("inorder :");
         bt.inorder(bt.root);
         System.out.println();
@@ -72,5 +112,10 @@ class BinaryTree {
         System.out.println();
         System.out.println("No of nodes in tree: " + bt.noOfNodes(bt.root));
         System.out.println("Maximum from tree: " + bt.getMax(bt.root));
+        System.out.println("Height of Tree: " + bt.height(bt.root));
+        System.out.print("Iterative Print Inorder: ");
+        bt.IterativeInorder(bt.root);
+        System.out.print("Iterative Print preorder: ");
+        bt.IterativePreorder(bt.root);
     }
 }
