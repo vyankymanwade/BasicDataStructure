@@ -42,28 +42,26 @@ class BST {
         return false;
     }
 
-    public void insert(Node newNode) {
-        if (root == null)
-            root = newNode;
+    public Node insert(Node root, Node newNode) {
         Node temp = root;
-        if (search(root, newNode.data)) {
-            System.out.println("already present");
-            return;
-        } else {
-            if (newNode.data > temp.data) {
-                while (temp.right != null && newNode.data > temp.data)
-                    temp = temp.right;
-                while (temp.left != null && newNode.data < temp.data)
-                    temp = temp.left;
-                temp.right = newNode;
-            } else {
-                while (temp.left != null && newNode.data < temp.data)
-                    temp = temp.left;
-                while (temp.right != null && newNode.data > temp.data)
-                    temp = temp.right;
-                temp.left = newNode;
-            }
+        Node parent = null;
+        while (temp != null) {
+            parent = temp;
+            if (newNode.data > temp.data)
+                temp = temp.right;
+            else if (newNode.data < temp.data)
+                temp = temp.left;
+            else
+                return root;
         }
+        if (parent == null)
+            return newNode;
+        if (newNode.data > parent.data)
+            parent.right = newNode;
+        else
+            parent.left = newNode;
+        return root;
+
     }
 
     public Node recursiveInsert(Node root, Node newNode) {
@@ -74,6 +72,34 @@ class BST {
         else
             root.left = recursiveInsert(root.left, newNode);
         return root;
+    }
+
+    public Node delete(Node root, int data) {
+        if (root == null)
+            return null;
+        else if (data > root.data)
+            root.right = delete(root.right, data);
+        else if (data < root.data)
+            root.left = delete(root.left, data);
+        else {
+            if (root.left == null) // node to be deleted only have right child
+                return root.right;
+            else if (root.right == null) // node to be deleted only have left child
+                return root.left;
+            else { // both child
+                Node successor = getSuccessor(root); // getting closet greater value
+                root.data = successor.data;
+                root.right = delete(root.right, successor.data);
+            }
+        }
+        return root;
+    }
+
+    public Node getSuccessor(Node root) {
+        Node temp = root.right;
+        while (temp != null && temp.left != null)
+            temp = temp.left;
+        return temp;
     }
 
     public static void main(String args[]) {
@@ -90,11 +116,15 @@ class BST {
         System.out.println();
         System.out.println("search(100): " + bst.search(bst.root, 100));
         System.out.println("IterativeSearch(70): " + bst.iterativeSearch(bst.root, 70));
-        // bst.insert(new Node(75));
-        // System.out.print("inorder : ");
-        // bst.inorder(bst.root);
-        // System.out.println();
+        bst.root = bst.insert(bst.root, new Node(45));
+        System.out.print("inorder : ");
+        bst.inorder(bst.root);
+        System.out.println();
         bst.root = bst.recursiveInsert(bst.root, new Node(75));
+        System.out.print("inorder : ");
+        bst.inorder(bst.root);
+        System.out.println();
+        bst.root = bst.delete(bst.root, 70);
         System.out.print("inorder : ");
         bst.inorder(bst.root);
         System.out.println();
